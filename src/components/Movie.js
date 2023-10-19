@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
+import App from '../App';
 
 import axios from 'axios';
 
@@ -10,6 +11,16 @@ const Movie = (props) => {
 
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const handleDelete = () => {
+    axios.delete(`http://localhost:9000/api/movies/${id}`)
+      .then(res => {
+        props.deleteMovie(id)
+        navigate('/movies ')
+      }).catch(err => {
+        console.log(err)
+      })
+  }
 
   useEffect(() => {
     axios.get(`http://localhost:9000/api/movies/${id}`)
@@ -52,7 +63,7 @@ const Movie = (props) => {
             <section>
               <span className="m-2 btn btn-dark">Favorite</span>
               <Link to={`/movies/edit/${movie.id}`} className="m-2 btn btn-success">Edit</Link>
-              <span className="delete"><input type="button" className="m-2 btn btn-danger" value="Delete" /></span>
+              <span className="delete"><input type="button" onClick={() => handleDelete()} className="m-2 btn btn-danger" value="Delete" /></span>
             </section>
           </div>
         </div>
